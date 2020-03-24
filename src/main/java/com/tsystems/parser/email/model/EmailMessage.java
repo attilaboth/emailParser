@@ -1,6 +1,8 @@
 package com.tsystems.parser.email.model;
 
-import com.independentsoft.exchange.Attachment;
+//import com.independentsoft.exchange.Attachment;
+
+import com.independentsoft.exchange.AttachmentInfo;
 import com.independentsoft.exchange.ItemId;
 
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ public class EmailMessage {
     private String messageBody;
     private Date receivedDate;
     private Date sentDate;
-    private Attachment attachment;
+    private List<AttachmentInfo> attachmentsInfo;
 
     public String getMessageBody() {
         return messageBody;
@@ -46,8 +48,24 @@ public class EmailMessage {
         return sentDate;
     }
 
-    public Attachment getAttachment() {
-        return attachment;
+    /**
+     * Only the builder can instantiate the object
+     *
+     * @param builder
+     */
+    private EmailMessage(EmailMessageBuilder builder) {
+        this.subject = builder.subject;
+        this.from = builder.from;
+        this.messageBody = builder.messageBody;
+        this.receivedDate = builder.receivedDate;
+        this.toRecipients = builder.toRecipients;
+        this.itemId = builder.itemId;
+        this.sentDate = builder.sentDate;
+        this.attachmentsInfo = builder.attachmentsInfo;
+    }
+
+    public List<AttachmentInfo> getAttachmentsInfo() {
+        return attachmentsInfo;
     }
 
     @Override
@@ -60,11 +78,10 @@ public class EmailMessage {
         sb.append(", messageBody='").append(messageBody).append('\'');
         sb.append(", receivedDate=").append(receivedDate);
         sb.append(", sentDate=").append(sentDate);
-        sb.append(", attachment=").append(attachment);
+        sb.append(", attachmentsInfo=").append(attachmentsInfo);
         sb.append('}');
         return sb.toString();
     }
-
 
     public static class EmailMessageBuilder {
 
@@ -75,7 +92,7 @@ public class EmailMessage {
         private String messageBody;
         private Date receivedDate;
         private Date sentDate;
-        private Attachment attachment;
+        private List<AttachmentInfo> attachmentsInfo;
 
         public EmailMessageBuilder setSubject(String subject) {
             this.subject = checkForNullOrEmpty(subject);
@@ -108,12 +125,12 @@ public class EmailMessage {
         }
 
         public EmailMessageBuilder setSentDate(Date sentDate) {
-            this.sentDate = (sentDate == null) ? sentDate = new Date() : sentDate;;
+            this.sentDate = (sentDate == null) ? sentDate = new Date() : sentDate;
             return this;
         }
 
-        public EmailMessageBuilder setAttachment(Attachment attachment) {
-            this.attachment = attachment;
+        public EmailMessageBuilder setAttachmentsInfo(List<AttachmentInfo> attachmentsInfo) {
+            this.attachmentsInfo = attachmentsInfo;
             return this;
         }
 
@@ -127,22 +144,6 @@ public class EmailMessage {
         public EmailMessage build() {
             return new EmailMessage(this);
         }
-    }
-
-    /**
-     * Only the builder can instantiate the object
-     *
-     * @param builder
-     */
-    private EmailMessage(EmailMessageBuilder builder) {
-        this.subject = builder.subject;
-        this.from = builder.from;
-        this.messageBody = builder.messageBody;
-        this.receivedDate = builder.receivedDate;
-        this.toRecipients = builder.toRecipients;
-        this.itemId = builder.itemId;
-        this.sentDate = builder.sentDate;
-        this.attachment = builder.attachment;
     }
 
 
